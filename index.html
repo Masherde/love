@@ -202,6 +202,35 @@
   .modal button:hover{
     background: #b95f78;
   }
+
+  .celebrate-text{
+    font-family:'Fraunces', serif;
+    font-size: 20px;
+    color: var(--rose);
+    margin: 20px 0 0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .celebrate-text.show{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #yayBtn.hide{
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #confetti{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+  }
 </style>
 </head>
 <body>
@@ -233,9 +262,12 @@
       <p>Выбери фильм по настроению, я разберусь с остальным — пледом, светом и чаем.</p>
       <div class="day">Четверг</div>
       <br>
-      <button onclick="closeModal()">Ура, жду ❤</button>
+      <button id="yayBtn" onclick="celebrate()">Ура, жду ❤</button>
+      <p id="celebrateText" class="celebrate-text">Как же я этому рад!</p>
     </div>
   </div>
+
+  <canvas id="confetti"></canvas>
 
 <script>
   function openModal(){
@@ -243,6 +275,75 @@
   }
   function closeModal(){
     document.getElementById('overlay').classList.remove('show');
+  }
+
+  function celebrate(){
+    document.getElementById('yayBtn').classList.add('hide');
+    document.getElementById('celebrateText').classList.add('show');
+    fireConfetti();
+  }
+
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const colors = ['#c9758a', '#cfa16a', '#faf3f0', '#a8506a', '#e8d6d2'];
+
+  function fireConfetti(){
+    const pieces = [];
+    const count = 140;
+
+    for(let i=0;i<count;i++){
+      pieces.push({
+        x: canvas.width/2 + (Math.random()-0.5)*40,
+        y: canvas.height*0.55,
+        vx: (Math.random()-0.5)*11,
+        vy: -(Math.random()*11 + 6),
+        size: Math.random()*6+4,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        rotation: Math.random()*360,
+        rotationSpeed: (Math.random()-0.5)*10,
+        gravity: 0.28,
+        life: 0
+      });
+    }
+
+    let frame = 0;
+    const maxFrames = 160;
+
+    function animate(){
+      frame++;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      pieces.forEach(p=>{
+        p.vy += p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.rotationSpeed;
+        p.life++;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI/180);
+        ctx.globalAlpha = Math.max(0, 1 - frame/maxFrames);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+        ctx.restore();
+      });
+
+      if(frame < maxFrames){
+        requestAnimationFrame(animate);
+      } else {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+    }
+
+    animate();
   }
 </script>
 
