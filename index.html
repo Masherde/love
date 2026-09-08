@@ -203,24 +203,29 @@
     background: #b95f78;
   }
 
-  .celebrate-text{
-    font-family:'Fraunces', serif;
-    font-size: 20px;
-    color: var(--rose);
-    margin: 20px 0 0;
+  #step2{
     opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease;
   }
 
-  .celebrate-text.show{
+  #step2.show{
     opacity: 1;
-    transform: translateY(0);
+    max-height: 400px;
   }
 
-  #yayBtn.hide{
-    opacity: 0;
-    pointer-events: none;
+  #step1.hide{
+    display: none;
+  }
+
+  .signature{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--rose);
+    margin: 6px 0 0 !important;
+    opacity: 1 !important;
   }
 
   #confetti{
@@ -244,7 +249,6 @@
         </svg>
       </div>
 
-      <p class="eyebrow">не могу молчать об этом</p>
       <h1>Я тебя <em>люблю</em>.<br>А ты меня?</h1>
       <p class="sub">выбери один из двух вариантов ниже — оба правильные</p>
 
@@ -257,13 +261,20 @@
 
   <div class="overlay" id="overlay">
     <div class="modal">
-      <p class="tag">отлично, тогда решено</p>
-      <h2>Идём ко мне смотреть фильм</h2>
-      <p>Выбери фильм по настроению, я разберусь с остальным — пледом, светом и чаем.</p>
-      <div class="day">Четверг</div>
-      <br>
-      <button id="yayBtn" onclick="celebrate()">Ура, жду ❤</button>
-      <p id="celebrateText" class="celebrate-text">Как же я этому рад!</p>
+
+      <div id="step1">
+        <h2>Согласна ли ты посмотреть со мной фильм в четверг?</h2>
+        <p>Выбери плед, я разберусь с остальным — светом и чаем.</p>
+        <div class="day">Четверг</div>
+        <br>
+        <button id="yesBtn" onclick="celebrate()">Да</button>
+      </div>
+
+      <div id="step2" class="step2-hidden">
+        <h2>Как же я рад.<br>Я очень тебя ценю ❤</h2>
+        <p class="signature">Твой любимый Яша</p>
+      </div>
+
     </div>
   </div>
 
@@ -278,8 +289,8 @@
   }
 
   function celebrate(){
-    document.getElementById('yayBtn').classList.add('hide');
-    document.getElementById('celebrateText').classList.add('show');
+    document.getElementById('step1').classList.add('hide');
+    document.getElementById('step2').classList.add('show');
     fireConfetti();
   }
 
