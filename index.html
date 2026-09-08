@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вопрос</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;600&display=swap');
+
+  :root{
+    --plum: #3a1f2b;
+    --rose: #c9758a;
+    --rose-deep: #a8506a;
+    --cream: #faf3f0;
+    --gold: #cfa16a;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: radial-gradient(120% 120% at 50% 0%, #4b2836 0%, #2c1620 60%, #200f18 100%);
+    font-family: 'Manrope', sans-serif;
+    color: var(--cream);
+    overflow-x:hidden;
+  }
+
+  .stage{
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 32px 20px;
+  }
+
+  .card{
+    max-width: 460px;
+    width:100%;
+    text-align:center;
+  }
+
+  .eyebrow{
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--rose);
+    margin: 0 0 18px;
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(34px, 8vw, 52px);
+    line-height: 1.15;
+    margin: 0 0 14px;
+    color: var(--cream);
+  }
+
+  h1 em{
+    font-style: normal;
+    color: var(--rose);
+  }
+
+  p.sub{
+    font-size: 16px;
+    line-height: 1.6;
+    color: #e8d6d2;
+    margin: 0 0 42px;
+    opacity: 0.85;
+  }
+
+  .choices{
+    display:flex;
+    gap: 16px;
+    justify-content:center;
+    flex-wrap: wrap;
+  }
+
+  button.choice{
+    font-family:'Manrope', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 999px;
+    border: 1px solid rgba(250,243,240,0.25);
+    background: transparent;
+    color: var(--cream);
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+
+  button.choice:hover{
+    transform: translateY(-2px);
+    background: rgba(250,243,240,0.08);
+    border-color: rgba(250,243,240,0.5);
+  }
+
+  button.choice.primary{
+    background: var(--rose-deep);
+    border-color: var(--rose-deep);
+  }
+
+  button.choice.primary:hover{
+    background: #b95f78;
+    border-color: #b95f78;
+  }
+
+  /* heart */
+  .heart-wrap{
+    margin-bottom: 28px;
+    display:flex;
+    justify-content:center;
+  }
+  .heart-wrap svg{
+    width: 46px; height: 46px;
+    opacity: 0.9;
+  }
+
+  /* overlay */
+  .overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 7, 12, 0.72);
+    backdrop-filter: blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+    z-index: 10;
+  }
+
+  .overlay.show{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal{
+    background: linear-gradient(180deg, #452436, #2c1620);
+    border: 1px solid rgba(250,243,240,0.14);
+    border-radius: 24px;
+    max-width: 420px;
+    width: 100%;
+    padding: 40px 32px;
+    text-align:center;
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .overlay.show .modal{
+    transform: translateY(0) scale(1);
+  }
+
+  .modal .tag{
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.03em;
+    margin: 0 0 10px;
+  }
+
+  .modal h2{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0 0 16px;
+    line-height: 1.25;
+  }
+
+  .modal p{
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e8d6d2;
+    margin: 0 0 28px;
+    opacity: 0.9;
+  }
+
+  .modal .day{
+    display:inline-block;
+    font-family:'Fraunces', serif;
+    font-size: 20px;
+    color: var(--cream);
+    border-top: 1px solid rgba(250,243,240,0.2);
+    border-bottom: 1px solid rgba(250,243,240,0.2);
+    padding: 10px 26px;
+    margin-bottom: 28px;
+  }
+
+  .modal button{
+    font-family:'Manrope', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: 999px;
+    border: none;
+    background: var(--rose-deep);
+    color: var(--cream);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .modal button:hover{
+    background: #b95f78;
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage">
+    <div class="card">
+      <div class="heart-wrap">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21s-7.5-4.6-10-9.2C.4 8.6 2 5 5.6 5c2 0 3.5 1.1 4.4 2.6C10.9 6.1 12.4 5 14.4 5 18 5 19.6 8.6 22 11.8 14.5 16.4 12 21 12 21z"
+            stroke="#c9758a" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <p class="eyebrow">не могу молчать об этом</p>
+      <h1>Я тебя <em>люблю</em>.<br>А ты меня?</h1>
+      <p class="sub">выбери один из двух вариантов ниже — оба правильные</p>
+
+      <div class="choices">
+        <button class="choice" onclick="openModal()">Да</button>
+        <button class="choice primary" onclick="openModal()">Конечно да!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <p class="tag">отлично, тогда решено</p>
+      <h2>Идём ко мне смотреть фильм</h2>
+      <p>Выбери фильм по настроению, я разберусь с остальным — пледом, светом и чаем.</p>
+      <div class="day">Четверг</div>
+      <br>
+      <button onclick="closeModal()">Ура, жду ❤</button>
+    </div>
+  </div>
+
+<script>
+  function openModal(){
+    document.getElementById('overlay').classList.add('show');
+  }
+  function closeModal(){
+    document.getElementById('overlay').classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
